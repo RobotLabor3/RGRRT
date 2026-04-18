@@ -1,0 +1,88 @@
+planner_configs:
+  RewardRRT:
+    type: geometric::RewardRRT
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    beta: 1.0  # encourage exploration. default: 1.0
+    forgetting_factor: 0.1  # forgetting factor. default: 0.1
+    negative_sigma_limit: 3.0  # limit for negative reward. default: 3.0
+    R_cum: 0.0001  #the variance of the reward_cum noise. default: 0.01^2=0.0001
+    R_inc: 0.0004 #the variance of the reward_inc noise. default: 0.4^2=0.16
+  RGRRT:
+    type: geometric::RGRRT
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+  LazyPRMstar:
+    type: geometric::LazyPRMstar
+  AITstar:
+    type: geometric::AITstar
+    use_k_nearest: 1  # whether to use a k-nearest RGG connection model (1) or an r-disc model (0). Default: 1
+    rewire_factor: 1.2  # rewire factor of the RGG. Valid values: [1.0:0.01:3.0]. Default: 1.001
+    samples_per_batch: 100  # batch size. Valid values: [1:1:1000]. Default: 100
+    use_graph_pruning: 1  # enable graph pruning (1) or not (0). Default: 1
+    find_approximate_solutions: 1  # track approximate solutions (1) or not (0). Default: 0
+    set_max_num_goals: 1  # maximum number of goals sampled from sampleable goal regions. Valid values: [1:1:1000]. Default: 1
+  ABITstar:
+    type: geometric::ABITstar
+    initial_inflation_factor: 1000000  # inflation factor for the initial search. Valid values: [1.0:0.01:1000000.0]. Default: 1000000
+    inflation_scaling_parameter: 10  # scaling parameter for the inflation factor update policy. Valid values: [1.0:0.01:1000000.0]. Default: 0
+    truncation_scaling_parameter: 5.0  # scaling parameter for the truncation factor update policy. Valid values: [1.0:0.01:1000000.0]. Default: 0
+  BITstar:
+    type: geometric::BITstar
+    use_k_nearest: 1  # whether to use a k-nearest RGG connection model (1) or an r-disc model (0). Default: 1
+    rewire_factor: 1.2  # rewire factor of the RGG. Valid values: [1.0:0.01:3.0]. Default: 1.001
+    samples_per_batch: 100  # batch size. Valid values: [1:1:1000]. Default: 100
+    use_graph_pruning: 1  # enable graph pruning (1) or not (0). Default: 1
+    prune_threshold_as_fractional_cost_change: 0.1  # fractional change in the solution cost AND problem measure necessary for pruning to occur. Default: 0.1
+    delay_rewiring_to_first_solution: 0  # delay (1) or not (0) rewiring until a solution is found. Default: 0
+    use_just_in_time_sampling: 0  # delay the generation of samples until they are * necessary. Only works with r-disc connection and path length minimization. Default: 0
+    drop_unconnected_samples_on_prune: 1  # drop unconnected samples when pruning, regardless of their heuristic value. Default: 0
+    stop_on_each_solution_improvement: 0  # stop the planner each time a solution improvement is found. Useful for debugging. Default: 0
+    use_strict_queue_ordering: 0  # sort edges in the queue at the end of the batch (0) or after each rewiring (1). Default: 0
+    find_approximate_solutions: 1  # track approximate solutions (1) or not (0). Default: 0
+  EITstar:
+    type: geometric::EITstar
+    use_k_nearest: 1  # whether to use a k-nearest RGG connection model (1) or an r-disc model (0). Default: 1
+    rewire_factor: 1.001  # rewire factor of the RGG. Valid values: [1.0:0.01:3.0]. Default: 1.001
+    batch_size: 100  # batch size. Valid values: [1:1:1000]. Default: 100
+    use_graph_pruning: 1  # enable graph pruning (1) or not (0). Default: 1
+    find_approximate_solutions: 0  # track approximate solutions (1) or not (0). Default: 0
+    set_max_num_goals: 1  # maximum number of goals sampled from sampleable goal regions. Valid values: [1:1:1000]. Default: 1
+  InformedRRTstar:
+    type: geometric::InformedRRTstar
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+  InformedRRTstarConnect:
+    type: geometric::InformedRRTstarConnect
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+  RRTstarConnect:
+    type: geometric::RRTstarConnect
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+  SORRTstar:
+    type: geometric::SORRTstar
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+  RRTstarkConfigDefault:
+    type: geometric::RRTstar
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+    delay_collision_checking: 1  # Stop collision checking as soon as C-free parent found. default 1
+  PRMstarkConfigDefault:
+    type: geometric::PRMstar
+arm_with_torso:
+  planner_configs:
+    - RewardRRT
+    - RGRRT
+    - RRTstarkConfigDefault
+    - PRMstarkConfigDefault
+    - AITstar
+    - ABITstar
+    - BITstar
+    - InformedRRTstar
+    - SORRTstar
+    - LazyPRMstar
+    - EITstar
+    - InformedRRTstarConnect
+    - RRTstarConnect   
+  projection_evaluator: joints(torso_lift_joint,shoulder_pan_joint)
+  longest_valid_segment_fraction: 0.005
